@@ -1,0 +1,27 @@
+create index idx_session_films_id on session (films_id)
+
+--расписание на определенную дату
+select s.data, f.name
+from session s
+    join films f on s.films_id = f.id
+where s.data between '2020-05-02T00:00:00' and '2020-05-03T00:00:00';
+
+--ближайший сеанс конкретного фильма
+select f.name, min(s.data) as stime
+from session s
+    join films f on s.films_id = f.id
+where s.data > '2020-05-05T00:00:00' and f.name = 'In Bruges'
+group by f.name;
+
+--количество посетителей по фильмам
+select count(s.id) as viewers, f.name
+from session s
+    join ticket t on s.id = t.session_id
+    join films f on s.films_id = f.id
+group by f.name;
+
+--прибыль за месяц
+select sum(t.price) as profit
+from session s
+    join ticket t on s.id = t.session_id
+where s.data between '2020-05-01T00:00:00' and '2020-06-01T00:00:00';
